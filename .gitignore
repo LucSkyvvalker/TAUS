@@ -1,5 +1,7 @@
 /data
+/jupyter
 
+*.ipynb
 
 # MacOS
 .DS_Store
