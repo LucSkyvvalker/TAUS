@@ -1,6 +1,7 @@
 /data
 /jupyter
 
+*.tsv
 *.ipynb
 
 # MacOS
