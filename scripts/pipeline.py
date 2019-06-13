@@ -33,19 +33,6 @@ def createClass(source, target):
     return sentence
 
 
-# In[31]:
-
-
-df,estimators = loader()
-iterator = 2376
-
-# sentence = createClass(source_sentence, target_sentence)
-sentence = createClass(df['source'][iterator],df['target'][iterator])
-
-
-
-
-
 """
 The function main will form a sentence object and run the
 analysing functions to derive their describing features.
@@ -80,3 +67,9 @@ def weightEstimation(wordCountEst, capitolEst, charEst):
     newList.append(capitolEst)
     newList.append(charEst)
     return newList
+
+df,estimators = loader()
+iterator = 2376
+
+# sentence = createClass(source_sentence, target_sentence)
+sentence = createClass(df['source'][iterator],df['target'][iterator])
