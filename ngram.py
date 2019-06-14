@@ -3,6 +3,8 @@ import numpy as np
 import sys
 from collections import defaultdict
 
+# Modified version homework Jelle van den Broek and Maurice Schaasberg
+
 def preprocess(file_path, min_count=1, char_level=False):
     """
     Returns a generator (a data stream) that yields one pre-processed sentence at a time.
@@ -294,5 +296,3 @@ print(log_ppl(test, "nns vbp rbr"))
 print(log_prob(test, "nns vbp rbr"))
 print(average_occurence(test, "nns vbp rbr"))
 print(unk_ngrams(test, "nns vbp rbr"))
-print(unk_ngrams(test, "hoi vbp zo"))
-print(unk_ngrams(test, "nns vbp"))
