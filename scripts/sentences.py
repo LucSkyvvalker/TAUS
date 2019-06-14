@@ -57,6 +57,12 @@ Input: source = the original sentence in string format
             if char == character:
                 t2 += 1
         self.chars[character] = abs(t1-t2)
+       
+    # count the differences in punction characters normalized by the amount of characters (no spaces)   
+    def characterDifferencesNormalized(self, character):
+       target = self.target
+       norm = len(target.replace(" ", ""))
+       self.charsNormalized[character] = characterDifferences(self, character)/norm
 
     # get PoS tokens of both sentences using spacy
     def tokenize(self):
@@ -81,6 +87,7 @@ Input: source = the original sentence in string format
         tgtTagCnt = self.tgtToks.count(tag)
         self.posDif[tag] = abs(srcTagCnt - tgtTagCnt)
 
+       
 
 """
 *** These estimators are a work in progress and do by
