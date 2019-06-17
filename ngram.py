@@ -291,8 +291,31 @@ def average_occurence(LM, sentence):
             count += count_table[history][word]/vocablen
     return count/(len(sentence) - order)
 
+def n_best(LM, sentence, method):
+    """
+    LM = Trained corpus
+    sentence = sentence
+    method = either log_ppl or log_prob
+    """
+    if method == log_ppl:
+        sentence_length = len(sentence.lower().split())
+        return method(LM, sentence), (method(LM, sentence) / sentence_length)
+    else: 
+        return method(LM, sentence)
+
+# all of the following probabilities can be found if the corresponding n-grams are trained
+    # using n-best for training LM: sentence 1-gram log-probability / sentence length
+    # using n-best for training LM: sentence 1-gram perplexity
+    # using n-best for training LM: sentence 2-gram log-probability
+    # using n-best for training LM: sentence 2-gram log-probability / sentence length
+    # using n-best for training LM: sentence 2-gram perplexity
+    # using n-best for training LM: sentence 3-gram log-probability
+    # using n-best for training LM: sentence 3-gram log-probability / sentence length
+    # using n-best for training LM: sentence 3-gram perplexity
+
 test = trainLM(1, 'sample_corpus_pos.en')
 print(log_ppl(test, "nns vbp rbr"))
 print(log_prob(test, "nns vbp rbr"))
 print(average_occurence(test, "nns vbp rbr"))
 print(unk_ngrams(test, "nns vbp rbr"))
+print(n_best(test, "nns vbp rbr", log_ppl))
