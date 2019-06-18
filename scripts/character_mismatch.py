@@ -1,6 +1,6 @@
 
 # find mismatches in brackets or accolades
-def mismatch(source, target):
+def getMismatch(source, target):
     tgtBrack = 0
     tgtAccolade = 0
     srcBrack = 0
