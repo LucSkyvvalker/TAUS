@@ -40,11 +40,24 @@ def equalizeTokens(tokensSrc, tokensTgt):
 def compareTokens(tokensSrc, tokensTgt, tag):
     return abs(tokensSrc.count(tag) - tokensTgt.count(tag))
 
+# calculate the percentage of the given tag
+def percentageOfTag(tokensSrc, tokensTgt, tag):
+    tokenCountSrc = 0
+    tokenCountTgt = 0
+    for i in range(len(tokensSrc)):
+        if tokensSrc[i] == tag:
+            tokenCountSrc += 1
+    for i in range(len(tokensTgt)):
+        if tokensTgt[i] == tag:
+            tokenCountTgt += 1
+    # returns two percentages, one for the source and the second for the target     
+    return tokenCountSrc/len(tokensSrc), tokenCountTgt/len(tokensTgt)
 
 # run all in order
 def main(source, target, tag):
     tokensSrc, tokensTgt = tokenize(source, target)
     tokensSrc, tokensTgt = equalizeTokens(tokensSrc, tokensTgt)
     dif = compareTokens(tokensSrc, tokensTgt, tag)
+    srcNouns, tgtNouns = percentageOfToken(tokensSrc, tokensTgt, "NOUN")
+    srcVerbs, tgtVerbs = percentageOfToken(tokensSrc, tokensTgt, "VERB")
     return dif
-
