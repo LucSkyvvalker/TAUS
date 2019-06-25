@@ -12,6 +12,7 @@ from scipy import optimize
 import matplotlib.pyplot as plt
 import sys
 from collections import defaultdict
+from joblib import dump, load
 
 x = [[0,0], [0,1], [0,2], [1, 0], [1,1], [1, 2], [2, 0], [2,1], [2, 2]]
 y = [0, 0, 0, 1, 1, 1, 1, 1, 1]
@@ -178,25 +179,43 @@ def nbayes(x, y):
         probdic[n] = fdic
     return probdic
 
-def trainnb(x, y):
-    nx, ml, sl = quartilezer(x)
-    probdic = nbayes(nx, y)
-    return probdic, ml ,sl
+class NBC:
+    def __init__(self):
+        probdic = {}
+        ml = []
+        sl = []
+    
+    def trainnb(self, x, y):
+        nx, ml, sl = quartilezer(x)
+        probdic = nbayes(nx, y)
+        self.probdic = probdic
+        self.ml = ml
+        self.sl = sl
+        return probdic, ml ,sl
 
-def classnb(pd, ml, sl ,points):
-    problist = []
-    classlist = []
-    np = quartilizems(points, ml, sl)
-    for point in np:
-        yprob = 1
-        nprob = 1
-        for n in range(len(point)):
-            yprob *= pd[n][1][point[n]]
-            nprob *= pd[n][0][point[n]]
-        if nprob > yprob:
-            classlist.append(0)
-            problist.append(nprob/(nprob + yprob))
-        else:
-            classlist.append(1)
-            problist.append(yprob/(nprob + yprob))
-    return classlist, problist
+    def classnb(self ,points):
+        prd = self.probdic
+        ml = self.ml
+        sl = self.sl
+        problist = []
+        classlist = []
+        np = quartilizems(points, ml, sl)
+        for point in np:
+            yprob = 1
+            nprob = 1
+            for n in range(len(point)):
+                yprob *= prd[n][1][point[n]]
+                nprob *= prd[n][0][point[n]]
+            if nprob > yprob:
+                classlist.append(0)
+                problist.append(nprob/(nprob + yprob))
+            else:
+                classlist.append(1)
+                problist.append(yprob/(nprob + yprob))
+        return classlist, problist
+    
+def savemodel(model, filename):
+    dump(model, filename)
+    
+def loadmodel(filename):
+    load(name)
