@@ -47,9 +47,30 @@ def equalize(validation):
     noEdit = t0[0]
     yesEdit = t0[1]
     if noEdit > yesEdit:
-
+        return 0
     else:
+        return 0
 
+def equalizer(x):
+    y = x[:, 1]
+    oc = sum(y)
+    zc = len(y) - oc
+    remlist = []
+    if oc > zc:
+        for n in range(len(y)):
+            if y[n] == 1:
+                remlist.append(n)
+        random.shuffle(remlist)
+        remlist = remlist[:oc - zc]
+    elif oc < zc:
+        for n in range(len(y)):
+            if y[n] == 0:
+                remlist.append(n)
+        random.shuffle(remlist)
+        remlist = remlist[:zc - oc]
+    remlist = sorted(remlist, reverse=True)
+    b = np.delete(a, remlist, axis=0)
+    return b
 
 if __name__ == "__main__":
     main()
