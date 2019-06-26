@@ -12,7 +12,8 @@ from scipy import optimize
 import matplotlib.pyplot as plt
 import sys
 from collections import defaultdict
-from joblib import dump, load
+from joblib import dump
+from joblib import load
 
 x = [[0,0], [0,1], [0,2], [1, 0], [1,1], [1, 2], [2, 0], [2,1], [2, 2]]
 y = [0, 0, 0, 1, 1, 1, 1, 1, 1]
@@ -29,7 +30,7 @@ def trainMLP(x, y):
     return clf
 
 def trainLR(x, y):
-    clf = LogisticRegression(random_state=0, solver='lbfgs',multi_class='multinomial')
+    clf = LogisticRegression(random_state=0, solver='lbfgs',multi_class='multinomial', max_iter=10000)
     clf.fit(x, y)
     return clf
 
@@ -66,7 +67,7 @@ def classmean(meanlist, alist, points, alpha):
             dislist.append(dis)
         classlist.append(alist[np.argmin(dislist)])
         dislist = np.array(dislist)
-        dislist += np.array([alpha] * len(alist)) 
+        dislist += np.array([alpha] * len(alist))
         blist = dislist ** 2
         dislist /= blist
         tot = np.sum(dislist)
@@ -101,7 +102,7 @@ def classreg(w, points, alpha):
             dislist.append(abs(score - uv))
         classlist.append(alist[np.argmin(dislist)])
         dislist = np.array(dislist)
-        dislist += np.array([alpha] * len(alist)) 
+        dislist += np.array([alpha] * len(alist))
         blist = dislist ** 2
         dislist /= blist
         tot = np.sum(dislist)
@@ -153,7 +154,7 @@ def quartilizems(x, ml, sl):
                 ncol.append(1)
         nx.append(ncol)
     return np.transpose(nx)
-                
+
 def nbayes(x, y):
     npx = np.array(x)
     probdic = {}
@@ -184,7 +185,7 @@ class NBC:
         probdic = {}
         ml = []
         sl = []
-    
+
     def trainnb(self, x, y):
         nx, ml, sl = quartilezer(x)
         probdic = nbayes(nx, y)
@@ -213,9 +214,9 @@ class NBC:
                 classlist.append(1)
                 problist.append(yprob/(nprob + yprob))
         return classlist, problist
-    
+
 def savemodel(model, filename):
     dump(model, filename)
-    
+
 def loadmodel(filename):
-    load(name)
+    return load(filename)
