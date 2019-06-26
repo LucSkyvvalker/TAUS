@@ -1,3 +1,7 @@
+import numpy as np
+import pandas as pd
+
+
 def accuracy(x, y):
     tot = len(x)
     cor = 0
@@ -34,5 +38,19 @@ def fscore(x, y):
     print(prec, recl)
     return 2 * (prec * recl) / (prec + recl)
 
-print(precision([1,0,0,1], [1,1,0,1]))
-print(fscore([1,0,0,1], [1,1,0,1]))
+def correlationMatrix(df, showExtra=False):
+    corrMat = df.corr()
+    if showExtra == True:
+        x = list(dfcorr1.columns)
+        for label in x:
+            z = list(dfcorr1.columns)
+            y = dfcorr1[label]
+            xx = sorted(zip(y,z), reverse=True)
+            print(label, xx[1])
+    return corrMat
+
+def crossEntropy(confScore, correctEst):
+    if correctEst == 1:
+        return -np.log(confScore)
+    else:
+        return -np.log(1 - confScore)

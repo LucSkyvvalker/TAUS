@@ -15,8 +15,8 @@ def main():
             1/0
         trainX = np.array(pd.read_csv('../data/trainX.csv'))
         testX =  np.array(pd.read_csv('../data/testX.csv'))
-        trainY =  np.array(pd.read_csv('../data/trainY.csv'))
-        testY =  np.array(pd.read_csv('../data/testY.csv'))
+        trainY =  np.array(pd.read_csv('../data/trainY.csv'),dtype=int)
+        testY =  np.array(pd.read_csv('../data/testY.csv'),dtype=int)
     except:
         print('Creating new train and test sets.')
         createTrainTestSets()
@@ -26,7 +26,7 @@ def main():
     trainY = trainY.ravel()
     print(trainY)
     print(len(trainY), sum(trainY), set(trainY))
-    testY =  np.array(pd.read_csv('../data/testY.csv'))
+    testY =  np.array(pd.read_csv('../data/testY.csv'), dtype=int)
     method = input('What model would you like to train \nSee README for available options: ' )
 
     if method == 'SVM':
