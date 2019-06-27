@@ -34,7 +34,7 @@ An in-depth explanation on each method and their results can be found in the acc
 - To use the scripts to create new models, for example for different language pairs, better PoS corpera or more features, a new features.csv and new n-gram models must be trained. Empty the /data directory and put a new dataset into the folder. You may have to change the file 'cleandatas.py' and change the filenames in 'main.py'. Then proceed with step 3 from Reproduce(#Reproduce)
 
 # Dependencies
-- 'python 3.x'
-- 'pandas'
-- 'numpy'
-- 'spaCy'
+- python 3.x
+- pandas
+- numpy
+- SpaCy
