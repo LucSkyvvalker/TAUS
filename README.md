@@ -38,3 +38,5 @@ An in-depth explanation on each method and their results can be found in the acc
 - pandas
 - numpy
 - SpaCy
+- SpaCy model: 'en_core_web_sm'
+- SpaCy model: 'nl_core_news_sm'
