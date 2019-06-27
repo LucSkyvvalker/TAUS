@@ -10,7 +10,7 @@ def confidenceScore():
     (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
     unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
     trigramTgtPos) = loadNLP()
-    method = input('What model would you like to use? \nSee README for available options: ' )
+    method = input('What model would you like to use \nSee README for available options: ' )
     while True:
         source = input('Source: \n')
         target = input('Target: \n')
@@ -39,7 +39,7 @@ def scoreder(cleandf,source, target, method,unigramSrc,bigramSrc, trigramSrc, un
     elif method == 'NBC':
         NBC = lc.loadmodel('../data/NBC.joblib')
         score = lc.NBC.classnb(NBC,sentFeats)
-
+        print(score)
     else:
         print('No valid method was given, please see the README for instrucions')
     return score
@@ -58,4 +58,6 @@ def loadNLP():
     bigramTgtPos = lc.loadmodel('../data/bigramTgtPos.joblib')
     trigramTgtPos = lc.loadmodel('../data/trigramTgtPos.joblib')
     return unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,trigramTgtPos
-confidenceScore()
+
+if __name__ == "__main__":
+    confidenceScore()

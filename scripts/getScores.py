@@ -11,7 +11,7 @@ def getScores():
     (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
     unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
     trigramTgtPos) = loadNLP()
-    method = "LR"
+    method = input('Whaaaat model would you like to use \nSee README for available options: ' )
     testX = np.array(pd.read_csv('../data/testX.csv'))
     testY =  np.array(pd.read_csv('../data/testY.csv'),dtype=int)
     if method == 'SVM':
@@ -36,8 +36,8 @@ def getScores():
         if scores[0][i] == testY[i]:
             correctEst = 1
         crossent.append(sc.crossEntropy(scores[1][i], correctEst))
-    print(np.mean(crossent))
-    return fscore
+    print('foo', np.mean(crossent))
+    return fscore, method, scores, crossent
 
 def loadNLP():
     unigramSrc = lc.loadmodel('../data/unigramSrc.joblib')
@@ -56,4 +56,6 @@ def loadNLP():
 
 
 
-getScores()
+
+if __name__ == "__main__":
+    getScores()

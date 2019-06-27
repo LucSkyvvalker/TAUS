@@ -14,19 +14,13 @@ def main():
         if temp == 'y':
             1/0
         trainX = np.array(pd.read_csv('../data/trainX.csv'))
-        testX =  np.array(pd.read_csv('../data/testX.csv'))
         trainY =  np.array(pd.read_csv('../data/trainY.csv'),dtype=int)
-        testY =  np.array(pd.read_csv('../data/testY.csv'),dtype=int)
     except:
         print('Creating new train and test sets.')
-        createTrainTestSets()
-    trainX = np.array(pd.read_csv('../data/trainX.csv'))
-    testX =  np.array(pd.read_csv('../data/testX.csv'))
-    trainY =  np.array(pd.read_csv('../data/trainY.csv'), dtype=int)
+        trainX, trainY = createTrainTestSets()
+    # trainX = np.array(pd.read_csv('../data/trainX.csv'))
+    # trainY =  np.array(pd.read_csv('../data/trainY.csv'), dtype=int)
     trainY = trainY.ravel()
-    print(trainY)
-    print(len(trainY), sum(trainY), set(trainY))
-    testY =  np.array(pd.read_csv('../data/testY.csv'), dtype=int)
     method = input('What model would you like to train \nSee README for available options: ' )
 
     if method == 'SVM':
@@ -51,21 +45,27 @@ def main():
 def createTrainTestSets():
     fullDf = pd.read_csv("../data/en-nl.tsv", sep="\t")
     cleandf = cd.cleandata(fullDf)
-
     try :
         features = pd.read_csv("../data/features.csv")
     except:
         features = extraction(cleandf)
+    edited = []
     validation = cleandf['edit_distance'].copy()
     for i in range(len(validation)):
         if validation[i] > 0:
-            validation[i] = 1
-    features['y'] = validation
+            edited.append(1)
+        else:
+            edited.append(0)
+        if validation[i] > 100:
+            validation[i] = 100
+
+    features['edited'] = edited
+    features['edit_distance'] = validation
+
     features = equalizer(np.array(features))
-    print(len(features), sum(features[:,-1]), set(features[:,-1]))
-    a,b,c,d = split(features,0.8)
+    a,c = split(features,0.8)
     print(len(c), sum(c), set(c))
-    return
+    return a, c
 
 
 
@@ -73,6 +73,7 @@ def extraction(cleandf):
     (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
         trigramTgtPos) = ex.getNgramModels()
+# uncomment when remaking the NgramModels
     # lc.savemodel(unigramSrc, '../data/unigramSrc.joblib')
     # lc.savemodel(bigramSrc, '../data/bigramSrc.joblib')
     # lc.savemodel(trigramSrc, '../data/trigramSrc.joblib')
@@ -101,18 +102,38 @@ def split(x, ratio):
         d.append(x[elem])
     train = np.array(d[:r])
     test = np.array(d[r:])
-    trainX = train[:, :-1]
-    testX = test[:, :-1]
-    trainY = train[:, -1]
-    testY = test[:, -1]
+    trainX = train[:, :-2]
+    testX = test[:, :-2]
+    trainY = train[:, -2]
+    testY = test[:, -2]
+    trainEditDist = train[:,-1]
+    testEditDist = test[:,-1]
     np.savetxt('../data/trainX.csv', trainX, delimiter=',')
     np.savetxt('../data/testX.csv', testX, delimiter=',')
     np.savetxt('../data/trainY.csv', trainY, delimiter=',')
     np.savetxt('../data/testY.csv', testY, delimiter=',')
-    return trainX, testX, trainY, testY
+    np.savetxt('../data/trainEditDist.csv', trainEditDist, delimiter=',')
+    np.savetxt('../data/testEditDist.csv', testEditDist, delimiter=',')
+    return trainX, trainY
+
+def onlyNoEdits(x):
+    y = x[:, -2]
+    for n in range(len(y)):
+        if y[n] == 0:
+            remlest.append(n)
+    b = np.delete(x, remlist, axis=0)
+    return b
+
+def onlyYesEdits(x):
+    y = x[:, -2]
+    for n in range(len(y)):
+        if y[n] == 1:
+            remlest.append(n)
+    b = np.delete(x, remlist, axis=0)
+    return b
 
 def equalizer(x):
-    y = x[:, -1]
+    y = x[:, -2]
     oc = int(sum(y))
     zc = int(len(y) - oc)
     remlist = []
