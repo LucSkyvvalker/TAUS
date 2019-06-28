@@ -31,7 +31,6 @@ def scoreder(cleandf,sentFeats):
     NBC = lc.loadmodel('../data/NBC.joblib')
     lr = lc.loadmodel('../data/lr.joblib')
     for i in range(len(sentFeats)):
-        print(i,'/',len(sentFeats))
         score = lc.NBC.classnb(NBC,[sentFeats[i]])
         if score[0][0] == 0:
             score = lc.classCLF(lr, sentFeats)
