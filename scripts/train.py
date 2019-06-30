@@ -3,14 +3,15 @@ import pandas as pd
 import cleandatas as cd
 import numpy as np
 import learnclassify as lc
-# from joblib import dump, load
+import corpusFuncs as corpf
 
-
-#"../data/en-nl.tsv"
-
-def main():
+"""
+The function train() trains the desired models, it has to be called for every
+model that has to be trained.
+"""
+def train():
     try:
-        temp = input('Would you like to re-train?[y/n]: ')
+        temp = input('Would you like to remake the train test split?[y/n] \n Please back up any previous splits before proceeding. ')
         if temp == 'y':
             1/0
         trainX = np.array(pd.read_csv('../data/trainX.csv'))
@@ -18,8 +19,6 @@ def main():
     except:
         print('Creating new train and test sets.')
         trainX, trainY = createTrainTestSets()
-    # trainX = np.array(pd.read_csv('../data/trainX.csv'))
-    # trainY =  np.array(pd.read_csv('../data/trainY.csv'), dtype=int)
     trainY = trainY.ravel()
     method = input('What model would you like to train \nSee README for available options: ' )
 
@@ -41,10 +40,14 @@ def main():
     return
 
 
-
+# create the train test splits for training the models
 def createTrainTestSets():
-    fullDf = pd.read_csv("../data/en-nl.tsv", sep="\t")
-    cleandf = cd.cleandata(fullDf)
+    try:
+        cleandf = pd.read_csv('../data/cleandf.csv',dtype=object)
+    except:
+        fullDf = pd.read_csv("../data/en-nl.tsv", sep="\t")
+        cleandf = cd.cleandata(fullDf)
+        cleandf.to_csv('../data/cleandf.csv')
     try :
         features = pd.read_csv("../data/features.csv")
     except:
@@ -63,36 +66,43 @@ def createTrainTestSets():
     features['edit_distance'] = validation
 
     features = equalizer(np.array(features))
-    a,c = split(features,0.8)
-    print(len(c), sum(c), set(c))
-    return a, c
+    trainX,trainY = split(features,0.8)
+    return trainX, trainY
 
 
-
+# extract all features from the dataset
 def extraction(cleandf):
+    try:
+        (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
+            unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
+            trigramTgtPos) = corpf.loadNLP()
+    remake = input("Would you like to retrain the ngram models? [y/n]")
     (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
-        trigramTgtPos) = ex.getNgramModels()
-# uncomment when remaking the NgramModels
-    # lc.savemodel(unigramSrc, '../data/unigramSrc.joblib')
-    # lc.savemodel(bigramSrc, '../data/bigramSrc.joblib')
-    # lc.savemodel(trigramSrc, '../data/trigramSrc.joblib')
-    # lc.savemodel(unigramTgt, '../data/unigramTgt.joblib')
-    # lc.savemodel(bigramTgt, '../data/bigramTgt.joblib')
-    # lc.savemodel(trigramTgt, '../data/trigramTgt.joblib')
-    # lc.savemodel(unigramSrcPos, '../data/unigramSrcPos.joblib')
-    # lc.savemodel(bigramSrcPos, '../data/bigramSrcPos.joblib')
-    # lc.savemodel(trigramSrcPos, '../data/trigramSrcPos.joblib')
-    # lc.savemodel(unigramTgtPos, '../data/unigramTgtPos.joblib')
-    # lc.savemodel(bigramTgtPos, '../data/bigramTgtPos.joblib')
-    # lc.savemodel(trigramTgtPos, '../data/trigramTgtPos.joblib')
+        trigramTgtPos) = corpf.getNgramModels()
+
+    if remake == 'y':
+        lc.savemodel(unigramSrc, '../data/unigramSrc.joblib')
+        lc.savemodel(bigramSrc, '../data/bigramSrc.joblib')
+        lc.savemodel(trigramSrc, '../data/trigramSrc.joblib')
+        lc.savemodel(unigramTgt, '../data/unigramTgt.joblib')
+        lc.savemodel(bigramTgt, '../data/bigramTgt.joblib')
+        lc.savemodel(trigramTgt, '../data/trigramTgt.joblib')
+        lc.savemodel(unigramSrcPos, '../data/unigramSrcPos.joblib')
+        lc.savemodel(bigramSrcPos, '../data/bigramSrcPos.joblib')
+        lc.savemodel(trigramSrcPos, '../data/trigramSrcPos.joblib')
+        lc.savemodel(unigramTgtPos, '../data/unigramTgtPos.joblib')
+        lc.savemodel(bigramTgtPos, '../data/bigramTgtPos.joblib')
+        lc.savemodel(trigramTgtPos, '../data/trigramTgtPos.joblib')
+    else:
+
     dfnew = ex.extractor(cleandf,unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
         trigramTgtPos)
     dfnew.to_csv('../data/features.csv', encoding='utf-8', index=False)
     return dfnew
 
-
+# split the dataset into train test set and make separate arrays of the validations
 def split(x, ratio):
     c = [n for n in range(len(x))]
     r = round(ratio*len(x))
@@ -116,22 +126,7 @@ def split(x, ratio):
     np.savetxt('../data/testEditDist.csv', testEditDist, delimiter=',')
     return trainX, trainY
 
-def onlyNoEdits(x):
-    y = x[:, -2]
-    for n in range(len(y)):
-        if y[n] == 0:
-            remlest.append(n)
-    b = np.delete(x, remlist, axis=0)
-    return b
-
-def onlyYesEdits(x):
-    y = x[:, -2]
-    for n in range(len(y)):
-        if y[n] == 1:
-            remlest.append(n)
-    b = np.delete(x, remlist, axis=0)
-    return b
-
+# equalize the train and test sets based on their validations so there is a 50/50 balance
 def equalizer(x):
     y = x[:, -2]
     oc = int(sum(y))
@@ -156,4 +151,4 @@ def equalizer(x):
     return b
 
 if __name__ == "__main__":
-    main()
+    train()

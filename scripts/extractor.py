@@ -14,20 +14,6 @@ import learnclassify as lc
 import corpusFuncs as corpf
 
 
-def getNgramModels():
-    corpus_en = '../data/brown.txt'
-    corpus_nl = '../data/kat.txt'
-    corpus_en_pos = '../data/sample_corpus_pos.en'
-    corpus_nl_pos = '../data/posCorp.txt'
-
-    (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
-        unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
-        trigramTgtPos) = corpf.trainCorpera(corpus_en, corpus_nl, corpus_en_pos, corpus_nl_pos)
-
-    return (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
-            unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
-            trigramTgtPos)
-
 def extractor(df, unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
         trigramTgtPos):

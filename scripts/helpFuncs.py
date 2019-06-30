@@ -3,6 +3,7 @@ import pandas as pd
 nlpSrc = spacy.load("en_core_web_sm")
 nlpTgt = spacy.load("nl_core_news_sm")
 
+# find differences in capitals in source target sentences
 def capitalDif(source, target):
     t1 = 0
     t2 = 0
