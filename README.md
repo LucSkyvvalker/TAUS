@@ -6,7 +6,7 @@ This repository contains the code used in the Second Year project of the Bachelo
 - [Contains](#Contains)
 - [Basics](#Basics)
 - [Reproduse](#Reproduse)
-- [New Models](#NewModels)
+- [Portability](#Portability)
 - [Dependencies](#Dependencies)
 
 # Contains
@@ -14,29 +14,51 @@ This repository contains the code used in the Second Year project of the Bachelo
 - /scripts: directory containing all scripts used in the project
 
 # Basics
-- This project aims to create a quality estimator for machine translations. The quality estimations are given as a confidence score in the range \[0-1\]. All models found in this directory are not meant for actual use, as they have not been trained properly, nor are the PoS corpera suffienct for actual use.
+- This project aims to create a confidence scoring alghorithm for machine translations. The confidence scores are given as probabilities, where 1 is a good translation and 0 a bad translation. All models found in this directory are not meant for actual use, as they have not been trained properly, nor are the PoS corpera suffienct for actual use.
 
 # Reproduce
-- To reproduce our results the following things need to be done:
-1. Install any dependencies and clone this directory
-2. Create a directory /data and move the features.csv, ngram- and ML-models to this directory
-3. Open a terminal in the scripts directory and run `$python3 main.py`, it will create a train and test set of the features.csv with a 4:1 ratio. If these files were allready made during a previous call of main.py it will ask if you wish to remake them.
-4. You will then be prompted with which Machine Learning method you wish to train based on the train and test sets. The options for this are(this may take some time, depending on the size of your train and test sets):
-  - SVM
-  - LR
-  - MLP
-  - NBC
-An in-depth explanation on each method and their results can be found in the accompanying paper.
-5. From the same terminal run `$python3 confidenceScore.py` it will prompt you for a Machine Learning model you wish to use, and continue to prompt for a "Source" and "Target" sentence. It will than give a confidence score for the target sentence to be correctly translated. To cancel the loop, press ctrl+c.
-6. (Optional) From the same terminal run `$python3 getScores.py`, it will prompt you for a Machine Learning model you wish to use and continue to give the Fscore and cross-entropy of the model based on the test set created in step 3.
+> Warning to use the .joblibs in this repository SKlearn v0.20.0 is needed.
 
-# NewModels
-- To use the scripts to create new models, for example for different language pairs, better PoS corpera or more features, a new features.csv and new n-gram models must be trained. Empty the /data directory and put a new dataset into the folder. You may have to change the file 'cleandatas.py' and change the filenames in 'main.py'. Then proceed with step 3 from Reproduce(#Reproduce)
+- To reproduce our results the following things need to be done:
+1. Install any dependencies and clone this repository
+2. Create a directory /data and move the features.csv, ngram- and ML-models to this directory
+3. Open a terminal in the scripts directory and run `$python3 train.py`, it will create a train and test set of the features.csv. If these files were allready made during a previous call of main.py it will ask if you wish to remake them.
+4. You will then be prompted which model you wish to train. The options for this are:
+  - `SVM`
+  - `LR`
+  - `MLP`
+  - `NBC`
+The training of these models may take some time, depending on the size of your dataset.
+An in-depth explanation on each method and their results can be found in the accompanying report.
+5. Run `$python3 scoreSentences.py`
+It will prompt you for a model you wish to use, and continue to prompt for a "Source" and "Target" sentence. It will than give a confidence score for the target sentence to be correctly translated. To cancel the loop, press ctrl+c.
+6. (Optional) Run `$python3 scoreModel.py`
+It will prompt you for a model you wish to use and continue to give the F1-score, Accuracy  and mean Cross-Entropy of the model. 
+
+# Portability
+To use the scripts for training on new datsets the following steps must be taken:
+
+> It is recommended to make back-ups of the /data folder before doing any of the following
+
+ 1. Place the dataset in the /data folder
+ 2.  Replace any calls to the dataset in the scripts.
+ 3. Run `python3 train.py` for each model you wish to train. 
+ This cleans the dataset, extracts the features and creates train and test sets.
+
+To use the scripts for training new N-Gram models:
+
+ 1. Remove all .joblibs from the /data folder.
+ 2. Place the desired corpera for the N-Gram models in the /data folder.
+You will need 4 corpera in .txt format, a plain text and a POS tagged corpus for the source and target language.
+3. Make sure that you have the SpaCy taggers for the correct languages loaded in `ngrams.py`
+ 4. Run `python3 train.py` 
+The N-Gram models are trained automaticaly, after which you can retrain the models.
 
 # Dependencies
 - python 3.x
-- pandas
-- numpy
-- SpaCy
-- SpaCy model: 'en_core_web_sm'
-- SpaCy model: 'nl_core_news_sm'
+	- SKlearn 
+	- pandas
+	- numpy
+	- SpaCy
+		- SpaCy model: 'en_core_web_sm'
+		- SpaCy model: 'nl_core_news_sm'
