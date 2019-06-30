@@ -11,7 +11,7 @@ model that has to be trained.
 """
 def train():
     try:
-        temp = input('Would you like to remake the train test split?[y/n] \n Please back up any previous splits before proceeding. ')
+        temp = input('Would you like to remake the train test split?[y/n] \nPlease back up any previous splits before proceeding. ')
         if temp == 'y':
             1/0
         trainX = np.array(pd.read_csv('../data/trainX.csv'))
@@ -76,12 +76,10 @@ def extraction(cleandf):
         (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
             unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
             trigramTgtPos) = corpf.loadNLP()
-    remake = input("Would you like to retrain the ngram models? [y/n]")
-    (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
-        unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
-        trigramTgtPos) = corpf.getNgramModels()
-
-    if remake == 'y':
+    except:
+        (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
+            unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
+            trigramTgtPos) = corpf.getNgramModels()
         lc.savemodel(unigramSrc, '../data/unigramSrc.joblib')
         lc.savemodel(bigramSrc, '../data/bigramSrc.joblib')
         lc.savemodel(trigramSrc, '../data/trigramSrc.joblib')
@@ -94,8 +92,6 @@ def extraction(cleandf):
         lc.savemodel(unigramTgtPos, '../data/unigramTgtPos.joblib')
         lc.savemodel(bigramTgtPos, '../data/bigramTgtPos.joblib')
         lc.savemodel(trigramTgtPos, '../data/trigramTgtPos.joblib')
-    else:
-
     dfnew = ex.extractor(cleandf,unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
         trigramTgtPos)

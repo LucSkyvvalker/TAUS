@@ -26,6 +26,7 @@ def scoreModel():
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
         trigramTgtPos) = corpf.loadNLP()
     except:
+        print('No ngram models were found, making new ones...')
         (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
         trigramTgtPos) = corpf.getNgramModels()

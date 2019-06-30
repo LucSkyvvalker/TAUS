@@ -17,9 +17,10 @@ def scoreInput():
         unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
         trigramTgtPos) = corpf.loadNLP()
     except:
+        print('No ngram models were found, making new ones...')
         (unigramSrc,bigramSrc, trigramSrc, unigramTgt,bigramTgt,trigramTgt,
-                unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
-                trigramTgtPos) = corpf.getNgramModels()
+        unigramSrcPos,bigramSrcPos,trigramSrcPos,unigramTgtPos,bigramTgtPos,
+        trigramTgtPos) = corpf.getNgramModels()
     method = input('What model would you like to use \nSee README for available options: ' )
     while True:
         source = input('Source: \n')
