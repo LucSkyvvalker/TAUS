@@ -30,7 +30,7 @@ This repository contains the code used in the Second Year project of the Bachelo
   - `NBC`
 The training of these models may take some time, depending on the size of your dataset.
 An in-depth explanation on each method and their results can be found in the accompanying report.
-5. Run `$python3 scoreSentences.py`
+5. Run `$python3 scoreInput.py`
 It will prompt you for a model you wish to use, and continue to prompt for a "Source" and "Target" sentence. It will than give a confidence score for the target sentence to be correctly translated. To cancel the loop, press ctrl+c.
 6. (Optional) Run `$python3 scoreModel.py`
 It will prompt you for a model you wish to use and continue to give the F1-score, Accuracy  and mean Cross-Entropy of the model. 
